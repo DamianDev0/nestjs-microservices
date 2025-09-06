@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres123
     ports:
-    - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -61,13 +61,14 @@ services:
     volumes:
       - ./microservices/api-gateway:/app
       - /app/node_modules
+      - ./shared:/shared
     command: npm run start:dev
 
   # User Service
   user-service:
     build:
-      context: ./microservices/user-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: microservices/user-service/Dockerfile
     container_name: user-service
     ports:
       - '3001:3001'
@@ -86,6 +87,7 @@ services:
     volumes:
       - ./microservices/user-service:/app
       - /app/node_modules
+      - ./shared:/shared
     command: npm run start:dev
 
   # Product Service
