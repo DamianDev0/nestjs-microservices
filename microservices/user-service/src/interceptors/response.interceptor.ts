@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiResponse } from '../../../../shared/common/interfaces/api-response.interface';
+import { ApiResponse } from '../interfaces/api-response.interface';
 
 @Injectable()
 export class ResponseInterceptor<T>
@@ -14,14 +14,16 @@ export class ResponseInterceptor<T>
 {
   intercept(
     context: ExecutionContext,
-    next: CallHandler,
+    next: CallHandler<T>,
   ): Observable<ApiResponse<T>> {
     return next.handle().pipe(
-      map((data) => ({
-        success: true,
-        data,
-        timestamp: new Date().toISOString(),
-      })),
+      map(
+        (data: T): ApiResponse<T> => ({
+          success: true,
+          data,
+          timestamp: new Date().toISOString(),
+        }),
+      ),
     );
   }
 }

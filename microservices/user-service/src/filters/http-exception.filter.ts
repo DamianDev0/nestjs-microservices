@@ -1,4 +1,3 @@
-// src/shared/filters/http-exception.filter.ts
 import {
   ExceptionFilter,
   Catch,
@@ -7,8 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiResponse } from '../../../../shared/common/interfaces/api-response.interface';
-
+import { ApiResponse } from 'src/interfaces/api-response.interface';
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
@@ -22,7 +20,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
-      message = (res as any).message || exception.message;
+
+      if (typeof res === 'string') {
+        message = res;
+      } else if (typeof res === 'object' && res !== null && 'message' in res) {
+        const msg = (res as { message: string | string[] }).message;
+        message = Array.isArray(msg) ? msg.join(', ') : msg;
+      } else {
+        message = exception.message;
+      }
     }
 
     const errorResponse: ApiResponse = {

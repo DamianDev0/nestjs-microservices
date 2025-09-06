@@ -17,12 +17,14 @@ export const databaseConfigs = {
     password: process.env.DATABASE_PASSWORD || 'postgres123',
     database: process.env.DATABASE_NAME || 'userdb',
   },
-  
+
   mongodb: {
     type: 'mongodb' as const,
-    uri: process.env.MONGODB_URI || 'mongodb://mongo:mongo123@localhost:27017/productdb?authSource=admin',
+    uri:
+      process.env.MONGODB_URI ||
+      'mongodb://mongo:mongo123@localhost:27017/productdb?authSource=admin',
   },
-  
+
   redis: {
     type: 'redis' as const,
     host: process.env.REDIS_HOST || 'localhost',
